@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdlib>		// For clearing Screen
 
-int createRepo();
+int yourRepo();
 
 
 int museBreak(){
@@ -46,7 +46,7 @@ int listCommit(){
 
 
 
-int createRepo(){
+int yourRepo(){
 	clear();
 	std::cout << "\n Your git repository";
 	std::cout << "\n	c list config";
@@ -59,15 +59,15 @@ int createRepo(){
 	switch(choice) {
         case 'c':
 			listConfig();
-			createRepo();
+			yourRepo();
 			break;
 		case 'e':
 			configRepo();
-			createRepo();
+			yourRepo();
 			break;
 		case 'l':
 			listCommit();
-			createRepo();
+			yourRepo();
 			break;
         case 'q':
 			museBreak();
@@ -75,8 +75,11 @@ int createRepo(){
     }
 }
 
+int repoExists(){
+	return 1;
+}
 
-int main(){
+void createRepo(){
 	clear();
 	std::cout << "\n\n	Create new empty repository?\n";
 	std::cout << "\n	y yes";
@@ -85,6 +88,23 @@ int main(){
 	std::cin >> yn;
 
 	if (yn=='y'){
+		yourRepo();
+	}
+}
+
+void commitHistory(){
+	clear();
+	std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
+	museBreak();
+	yourRepo();
+}
+
+
+
+int main(){
+	if (!repoExists()){
 		createRepo();
+	}else{
+		commitHistory();
 	}
 }
