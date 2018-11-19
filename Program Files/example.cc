@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>		// For clearing Screen
 #include "gitpp5.h"
+#include <cstdlib>
 
 void yourRepo();
 
@@ -31,11 +32,43 @@ void listConfig(){
 
 void configRepo(){
 	clear();
-	std::cout << "\n Configure Repository";
+	GITPP::REPO r;
+	auto c=r.config();
+
+	std::string mycwd(getenv("PWD"));
+	// char username = ;
+	std::cout << "\n Your git repository in <" << mycwd << ">\n" <<std::endl;
+	std::cout << "1. name: <" << c["user.name"] << ">\n";
+	std::cout << "2. email: <" << c["user.email"] << ">\n";
+
 	museBreak();
 
 }
 
+
+
+void listBranch(){
+	GITPP::REPO r;
+
+	// Display string for use in option selection
+	std::string alphabet[26] = {"a","b","c","d","e","f","g","h","i","j","k", "l","m","n","o","p","q","r","s", "t","u","v","w","x","y","z" };
+
+	std::cout << "\n	select a branch to display commits\n\n";
+	int branchCounter=-1; // Index of current branch
+	for(GITPP::BRANCH i : r.branches()){
+		branchCounter+=1;
+		std::cout << "	" << alphabet[branchCounter] << ". " << i << "\n";
+	}
+	if (branchCounter){
+		// If more than one branch, take input for choice
+
+		char choice;
+		std::cin >> choice;
+	}else{
+		listCommit(); // Only master branch exists, thus display that
+	}
+
+}
 
 
 void listCommit(){
@@ -82,7 +115,7 @@ void yourRepo(int invalid){
 			yourRepo(0);
 			break;
 		case 'l':
-			listCommit();
+			listBranch();
 			yourRepo(0);
 			break;
         case 'q':
@@ -125,11 +158,9 @@ void createRepo(){
 		}
 
 		GITPP::REPO r(path.c_str());
-		r.commits().create("test created from git_create.cc");
+		r.commits().create("First Commit!");
 
-		for(auto i : r.commits()){
-			std::cout << i << " " << i.signature().name() << " " << i.message() << "\n";
-		}
+		listCommit();
 
 		yourRepo(0);
 	}
@@ -140,13 +171,14 @@ void commitHistory(){
 	listCommit(); // Maybe hand an argument specifying to show only up to 10
 	// std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
 
-	museBreak();
+	// museBreak();
 	yourRepo(0);
 }
 
 
 
 int main(){
+
 	if (!repoExists()){
 		createRepo();
 	}else{
