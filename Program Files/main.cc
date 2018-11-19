@@ -23,16 +23,9 @@ void clear(){
 }
 
 
+
 void listConfig(){
-    clear();
-    std::cout << "\n List Configuration";
-    museBreak();
-
-}
-
-
-
-void configRepo(){
+    // Lists configuration of an existing repository
     clear();
     GITPP::REPO r;
     auto c=r.config();
@@ -54,6 +47,21 @@ void configRepo(){
     std::cout << "6. repository format version:     <" << repFmtVer.value() << ">\n";
     GITPP::CONFIG::ITEM logallrefupdates=c["core.logallrefupdates"];
     std::cout << "7. log all ref updates:           <" << logallrefupdates.value() << ">\n";
+    museBreak();
+
+}
+
+void configRepo(){
+    listConfig(); // First list config options
+
+    int choice;
+    std::cin >> choice;     // Take input for what user wants to configure
+
+    if (7>=choice && choice>=1){      // If a valid choice
+
+    }else{ // An invalid choice
+
+    }
     museBreak();
 
 }
@@ -103,7 +111,6 @@ void listBranch(){
         for(GITPP::BRANCH i : r.branches()){
             branchCounter+=1;
             if (choice == alphabet[branchCounter]){
-                // std::cout << "Switching to branch "<< i.name();
                 r.checkout(i.name());             // Switch to branch
                 listCommit();                     // Now list commits in this branch
                 break;

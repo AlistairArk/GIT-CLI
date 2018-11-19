@@ -7,7 +7,7 @@
 CPPFLAGS=-DTRACE_UNTESTED
 CXXFLAGS=-std=c++11 -Wall -pedantic
 
-GIT_HCI_PROGRAMS = example
+GIT_HCI_PROGRAMS = main
 HCI_H = hci0.h
 GITPP_H = gitpp5.h
 
