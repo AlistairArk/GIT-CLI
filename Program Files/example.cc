@@ -82,8 +82,19 @@ void yourRepo(){
 }
 
 int repoExists(){
-	return 1;
+	try{
+		GITPP::REPO r;
+
+		// auto c=r.config();
+		// GITPP::CONFIG::ITEM N=c["user.name"];
+		return 1;
+	}catch(GITPP::EXCEPTION_CANT_FIND const& e){
+		return 0;
+	}
+
 }
+
+
 
 void createRepo(){
 	clear();
@@ -94,6 +105,21 @@ void createRepo(){
 	std::cin >> yn;
 
 	if (yn=='y'){
+		// Begin creation of repository
+		std::string path=".";
+		try{
+			GITPP::REPO r(path.c_str());
+		}catch(GITPP::EXCEPTION_CANT_FIND const&){
+			GITPP::REPO r(GITPP::REPO::_create, path.c_str());
+		}
+
+		GITPP::REPO r(path.c_str());
+		r.commits().create("test created from git_create.cc");
+
+		for(auto i : r.commits()){
+			std::cout << i << " " << i.signature().name() << " " << i.message() << "\n";
+		}
+
 		yourRepo();
 	}
 }
