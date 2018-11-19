@@ -50,10 +50,10 @@ public:
 /* -------------------------------------------------------------------------- */
 // human interaction base class
 class HCI {
-public:
+protected:
 	HCI(std::string const& n="unnamed") : _name(n){ }
 	virtual ~HCI(){ }
-public:
+protected:
 	virtual void show(){
 		out() << "HCI " << name() << "\n";
 	}

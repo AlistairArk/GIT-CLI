@@ -57,24 +57,51 @@ class PROGRAM : public HCI_APPLICATION {
         std::cout << "6. repository format version:     <" << repFmtVer.value() << ">\n";
         GITPP::CONFIG::ITEM logallrefupdates=c["core.logallrefupdates"];
         std::cout << "7. log all ref updates:           <" << logallrefupdates.value() << ">\n";
-        museBreak();
+
 
     }
 
 
-    void configRepo(){
+    void configRepo(int invalid){
+        clear();
         listConfig(); // First list config options
+        invalidMsg(invalid);
 
-        int choice;
-        std::cin >> choice;     // Take input for what user wants to configure
 
-        if (7>=choice && choice>=1){      // If a valid choice
+        std::cout << "\n==== esc: leave ===="; // Return case
+        char choice=getkey(); // Take input for what user wants to configure
 
-        }else{ // An invalid choice
+        if (choice!=escape){
 
+            switch(choice) {
+
+                case '1':
+                    break;
+
+                case '2':
+                    break;
+
+                case '3':
+                    break;
+
+                case '4':
+                    break;
+
+                case '5':
+                    break;
+
+                case '6':
+                    break;
+
+                case '7':
+                    break;
+
+                default: // code to be executed if n doesn't match any constant
+                    configRepo(1); // Call back with invalid flag
+                    break;
+            }
         }
-        museBreak();
-
+        // museBreak();
     }
 
 
@@ -89,18 +116,35 @@ class PROGRAM : public HCI_APPLICATION {
         for(auto i : r.commits()){
             counter+=1;
             std::cout << counter << ". ";
-            // std::cout << git_commit_message(i);
-            std::cout << "<"<< i << "> <" << i.signature().name() << "> <" << i.message() << ">\n";
+
+            /*  Gets first line in commit message
+                Prints line, and then breaks */
+            std::istringstream f(i.message());
+            std::string line;
+            while (std::getline(f, line)) {
+                std::cout << "<"<< i << "> <" << i.signature().name() << "> <" << line << ">\n";
+                break;
+            }
         }
         museBreak();
 
     }
 
-    void listBranch(){
+    void invalidMsg(bool invalid){
+        if (invalid){
+            std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
+        }
+    }
+    void listBranch(int invalid){
+        clear();
+        invalidMsg(invalid);
         GITPP::REPO r;
-
         // Display string for use in option selection
-        char alphabet[] = {'a','b','c','d','e','f','g','h','i','j','k','l', 'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        char alphabet[] =  {'a','b','c','d','e',
+                            'f','g','h','i','j',
+                            'k','l','m','n','o',
+                            'p','q','r','s','t',
+                            'u','v','w','x','y','z'};
 
         std::cout << "\n    select a branch to display commits\n\n";
         int branchCounter=-1; // Index of current branch
@@ -111,13 +155,10 @@ class PROGRAM : public HCI_APPLICATION {
 
         if (branchCounter){ // If more than one branch, take input for choice
 
-            std::cout << "==== esc: leave"; // Return case
+            std::cout << "\n==== esc: leave ===="; // Return case
             char choice=getkey();
 
             if (choice!=escape){
-                char choice;
-                std::cin >> choice;
-
 
                 branchCounter = -1;         // Reset branchCounter
                 bool branchFound = 0;       // If Found then True
@@ -140,8 +181,7 @@ class PROGRAM : public HCI_APPLICATION {
                 }
 
                 if (!branchFound){ // If branch was not found
-                    std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
-                    listBranch();
+                    listBranch(1);
                 }
 
             }// Escape handed so return without doing anything else
@@ -158,38 +198,35 @@ class PROGRAM : public HCI_APPLICATION {
 
     void yourRepo(int invalid){
         clear();
-        if (invalid){
-            std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
-        }
+        invalidMsg(invalid);
+
+
         std::cout << "\n Your git repository";
         std::cout << "\n    c list config";
         std::cout << "\n    e configure repository";
         std::cout << "\n    l list commits";
         std::cout << "\n    q quit\n\n";
 
-        // char choice;
-        // std::cin >> choice;
-        // if (choice!='c'||choice!='e'||choice!='l'||choice!='q'){
-        // }
+
 
         char choice=getkey();
-        // if (choice==spacebar){
-        //     std::cout << "y is for yo";
-        // }
+
+
         switch(choice) {
 
             case 'c':
                 listConfig();
+                museBreak();
                 yourRepo(0);
                 break;
 
             case 'e':
-                configRepo();
+                configRepo(0);
                 yourRepo(0);
                 break;
 
             case 'l':
-                listBranch();
+                listBranch(0);
                 yourRepo(0);
                 break;
 
