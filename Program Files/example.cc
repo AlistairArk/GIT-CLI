@@ -47,8 +47,11 @@ void listCommit(){
 
 
 
-void yourRepo(){
+void yourRepo(int invalid){
 	clear();
+	if (invalid){
+		std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
+	}
 	std::cout << "\n Your git repository";
 	std::cout << "\n	c list config";
 	std::cout << "\n	e configure repository";
@@ -62,21 +65,21 @@ void yourRepo(){
 	switch(choice) {
         case 'c':
 			listConfig();
-			yourRepo();
+			yourRepo(0);
 			break;
 		case 'e':
 			configRepo();
-			yourRepo();
+			yourRepo(0);
 			break;
 		case 'l':
 			listCommit();
-			yourRepo();
+			yourRepo(0);
 			break;
         case 'q':
 			museBreak();
 			break;
 		default: // code to be executed if n doesn't match any constant
-			std::cout << "\n Invalid arguments supplied. Please try again.";
+			yourRepo(1);
 			break;
     }
 }
@@ -120,7 +123,7 @@ void createRepo(){
 			std::cout << i << " " << i.signature().name() << " " << i.message() << "\n";
 		}
 
-		yourRepo();
+		yourRepo(0);
 	}
 }
 
@@ -128,7 +131,7 @@ void commitHistory(){
 	clear();
 	std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
 	museBreak();
-	yourRepo();
+	yourRepo(0);
 }
 
 

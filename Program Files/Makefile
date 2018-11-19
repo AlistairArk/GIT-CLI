@@ -9,7 +9,7 @@ CXXFLAGS=-std=c++11 -Wall -pedantic
 
 GIT_HCI_PROGRAMS = example
 HCI_H = hci0.h
-GITPP_H = gitpp1.h
+GITPP_H = gitpp5.h
 
 HCI_PROGRAMS = ${GIT_HCI_PROGRAMS}
 GIT_PROGRAMS = ${GIT_HCI_PROGRAMS}
