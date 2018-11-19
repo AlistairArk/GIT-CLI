@@ -671,8 +671,7 @@ static int resolve_refish(git_annotated_commit **commit, git_repository *repo, c
 
 //inline void REPO::checkout(COMMIT const& refname)
 //inline void REPO::checkout(BRANCH const& refname)
-inline void REPO::checkout(std::string const& refname)
-{
+inline void REPO::checkout(std::string const& refname){
 	git_checkout_options opts=GIT_CHECKOUT_OPTIONS_INIT;
 	git_commit *target_commit=nullptr;
 	git_annotated_commit *target=nullptr;
