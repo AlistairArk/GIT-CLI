@@ -82,21 +82,24 @@ public:
 };
 
 class SIGNATURE{
-public:
-	SIGNATURE(git_commit const* c){
-		assert(c);
-		const git_signature *sig;
-		if (!(sig = git_commit_author(c))) {
-			throw EXCEPTION("something wrong in sig");
-		}else{
-			_s = std::make_pair(std::string(sig->name), std::string(sig->email));
-		}
-	}
-public:
-	std::string const& name() const{ return _s.first; }
-	std::string const& email() const{ return _s.second; }
-private:
-	std::pair<std::string, std::string> _s;
+    /*
+    used in printing out commit history
+    */
+    public:
+    	SIGNATURE(git_commit const* c){
+    		assert(c);
+    		const git_signature *sig;
+    		if (!(sig = git_commit_author(c))) {
+    			throw EXCEPTION("something wrong in sig");
+    		}else{
+    			_s = std::make_pair(std::string(sig->name), std::string(sig->email));
+    		}
+    	}
+    public:
+    	std::string const& name() const{ return _s.first; }
+    	std::string const& email() const{ return _s.second; }
+    private:
+    	std::pair<std::string, std::string> _s;
 };
 
 class COMMIT{

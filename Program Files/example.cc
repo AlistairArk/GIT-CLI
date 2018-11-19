@@ -40,12 +40,16 @@ void configRepo(){
 
 void listCommit(){
 	clear();
-	std::cout << "\n Your Commits: \n";
+	std::cout << "\n Your Commits: \n\n";
 
 	GITPP::REPO r;
 
+	int counter=0;
 	for(auto i : r.commits()){
-		std::cout << i << " " << i.signature().name() << "\n";
+		counter+=1;
+		std::cout << counter << ". ";
+		// std::cout << git_commit_message(i);
+		std::cout << "<"<< i << "> <" << i.signature().name() << "> <" << i.message() << ">\n";
 	}
 	museBreak();
 
@@ -92,11 +96,9 @@ void yourRepo(int invalid){
 
 int repoExists(){
 	try{
-		GITPP::REPO r;
-
-		// auto c=r.config();
-		// GITPP::CONFIG::ITEM N=c["user.name"];
+		GITPP::REPO r; // If repo exists return 1
 		return 1;
+
 	}catch(GITPP::EXCEPTION_CANT_FIND const& e){
 		return 0;
 	}
