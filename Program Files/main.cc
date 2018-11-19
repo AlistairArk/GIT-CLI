@@ -89,7 +89,7 @@ void listBranch(){
     GITPP::REPO r;
 
     // Display string for use in option selection
-    char alphabet[] = {'a','b','c','d','e','f','g','h','i','j','k','l', 'm','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    char alphabet[] = {'a','b','c','d','e','f','g','h','i','j','k','l', 'm','n','o','p','q','r','s','t','u','v','w','x','y'};
 
     std::cout << "\n    select a branch to display commits\n\n";
     int branchCounter=-1; // Index of current branch
@@ -97,6 +97,8 @@ void listBranch(){
         branchCounter+=1;
         std::cout << "    " << alphabet[branchCounter] << ". " << i << "\n";
     }
+    std::cout << "z. Return"; // Return case
+
     if (branchCounter){
         // If more than one branch, take input for choice
         char choice;
@@ -104,6 +106,7 @@ void listBranch(){
 
 
         branchCounter = -1;         // Reset branchCounter
+        bool branchFound = 0;       // If Found then True
 
         std::string out_string;
 
@@ -111,10 +114,19 @@ void listBranch(){
         for(GITPP::BRANCH i : r.branches()){
             branchCounter+=1;
             if (choice == alphabet[branchCounter]){
-                r.checkout(i.name());             // Switch to branch
-                listCommit();                     // Now list commits in this branch
-                break;
+                branchFound = 1;
+                if (alphabet[branchCounter]=='z'){    // If return without doing anything else
+                    break;
+                }else{
+                    r.checkout(i.name());             // Switch to branch
+                    listCommit();                     // Now list commits in this branch
+                    break;
+                }
             }
+        }
+
+        if (!branchFound){ // If branch was not found
+            std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
         }
 
     }else{
@@ -181,7 +193,7 @@ void createRepo(){
     clear();
     std::cout << "\n\n    Create new empty repository?\n";
     std::cout << "\n    y yes";
-    std::cout << "\n    no, quit\n\n";
+    std::cout << "\n    no, quit\n\n >";
     char yn;
     std::cin >> yn;
 
