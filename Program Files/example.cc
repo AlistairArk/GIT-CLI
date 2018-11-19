@@ -40,7 +40,13 @@ void configRepo(){
 
 void listCommit(){
 	clear();
-	std::cout << "\n List Commits";
+	std::cout << "\n Your Commits: \n";
+
+	GITPP::REPO r;
+
+	for(auto i : r.commits()){
+		std::cout << i << " " << i.signature().name() << "\n";
+	}
 	museBreak();
 
 }
@@ -129,7 +135,9 @@ void createRepo(){
 
 void commitHistory(){
 	clear();
-	std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
+	listCommit(); // Maybe hand an argument specifying to show only up to 10
+	// std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
+
 	museBreak();
 	yourRepo(0);
 }
