@@ -326,7 +326,10 @@ class PROGRAM : public HCI_APPLICATION {
 
 
 
-    void listCommit(){
+    void listCommit(int maxNum){
+        // maxNum = Maximum number of commits to be displayed.
+        //          Set as 0 to display all commits.
+
         clear();
         std::cout << "\n Your Commits: \n\n";
 
@@ -345,6 +348,7 @@ class PROGRAM : public HCI_APPLICATION {
                 std::cout << "<"<< i << "> <" << i.signature().name() << "> <" << line << ">\n";
                 break;
             }
+            if (counter==maxNum)break;
         }
         museBreak();
 
@@ -402,7 +406,7 @@ class PROGRAM : public HCI_APPLICATION {
                                 listBranch(0);
                             }else{
                                 r.checkout(i.name());             // Switch to branch
-                                listCommit();                     // Now list commits in this branch
+                                listCommit(0);                     // Now list commits in this branch
                                 break;
                             }
                         }
@@ -417,7 +421,7 @@ class PROGRAM : public HCI_APPLICATION {
 
 
         }else{
-            listCommit(); // Only master branch exists, thus display that
+            listCommit(0); // Only master branch exists, thus display that
         }
 
     }
@@ -504,28 +508,24 @@ class PROGRAM : public HCI_APPLICATION {
             GITPP::REPO r(path.c_str());
             r.commits().create("First Commit!");
 
-            listCommit();
+            listCommit(0);
 
             yourRepo(0);
+        }else{
+            std::cout << "Goodbye!\n\n";
         }
     }
 
 
-    void commitHistory(){
-        clear();
-        listCommit(); // Maybe hand an argument specifying to show only up to 10
-        // std::cout << "Show a page with the first ten commits in the history, similar to the output of git log";
 
-        // museBreak();
-        yourRepo(0);
-    }
 
 public:
     void startup(){
         if (!repoExists()){
             createRepo();
         }else{
-            commitHistory();
+            listCommit(10); // List first 10 commits
+            yourRepo(0);
         }
 
     }
