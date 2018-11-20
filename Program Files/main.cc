@@ -55,10 +55,28 @@ class PROGRAM : public HCI_APPLICATION {
         std::cout << "5. filemode:                      <" << filemode.value() << ">\n";
         GITPP::CONFIG::ITEM repFmtVer=c["core.repositoryformatversion"];
         std::cout << "6. repository format version:     <" << repFmtVer.value() << ">\n";
-        GITPP::CONFIG::ITEM logallrefupdates=c["core.logallrefupdates"];
-        std::cout << "7. log all ref updates:           <" << logallrefupdates.value() << ">\n";
+        GITPP::CONFIG::ITEM logAllRefUpdts=c["core.logallrefupdates"];
+        std::cout << "7. log all ref updates:           <" << logAllRefUpdts.value() << ">\n";
 
 
+    }
+
+    int confirm(){
+        // Simple function used for y/n (yes/no) cases
+
+        std::cout << "\n Confirm changes? [y/n]";
+        while(char choice=getkey()){ // Take input for what user wants to configure
+
+            // Will not return value until either 'y' or 'n' is pressed
+            if (choice=='y'){
+                return(1);
+            }else{
+                if (choice=='n'){
+                    return(0);
+                }
+            }
+        }
+        return 0;
     }
 
 
@@ -69,37 +87,143 @@ class PROGRAM : public HCI_APPLICATION {
 
 
         std::cout << "\n==== esc: leave ===="; // Return case
+
         char choice=getkey(); // Take input for what user wants to configure
 
         if (choice!=escape){
 
+            GITPP::REPO r;
+            auto c=r.config();
+            GITPP::CONFIG::ITEM name=c["user.name"];
+            GITPP::CONFIG::ITEM email=c["user.email"];
+            GITPP::CONFIG::ITEM pushDef=c["push.default"];
+            GITPP::CONFIG::ITEM bare=c["core.bare"];
+            GITPP::CONFIG::ITEM filemode=c["core.filemode"];
+            GITPP::CONFIG::ITEM repFmtVer=c["core.repositoryformatversion"];
+            GITPP::CONFIG::ITEM logAllRefUpdts=c["core.logallrefupdates"];
+            std::string newValue;
+            int loop = 1;
+
+            invalid = 0; // Lower invalid flag
             switch(choice) {
 
                 case '1':
+                    clear();
+                    std::cout << "\n Enter A New Name | Current Name: <" << name.value() << ">\n\n>>>";
+                    std::cin >> newValue;
+                    std::cout << "\n<" << name.value() << "> --> <" << newValue <<">\n";
+                    if (confirm()){ // If true, then set new val, else do nothing
+                        c["user.name"] = newValue;
+                    }
                     break;
 
                 case '2':
+                    clear();
+                    std::cout << "\n Enter A New Email | Current Email: <" << email.value() << ">\n\n>>>";
+                    std::cin >> newValue;
+                    std::cout << "\n<" << name.value() << "> --> <" << newValue <<">\n";
+                    if (confirm()){ // If true, then set new val, else do nothing
+                        c["user.email"] = newValue;
+                    }
                     break;
 
                 case '3':
+
+                    while (loop) { // Loop until case breaking choice is made
+                        clear();
+                        invalidMsg(invalid);
+                        std::cout << "\n Select Push Mode | Current Mode: <" << pushDef.value() << ">\n\n";
+                        std::cout << "\n    1. simple";
+                        std::cout << "\n    2. matching";
+                        std::cout << "\n    3. upstream";
+                        std::cout << "\n    4. current";
+                        std::cout << "\n    5. nothing\n";
+                        if (loop==1){
+                            std::cout << "\n==== esc: leave ===="; // Return case
+                            loop=2;                 // Assume loop will be broken
+                            invalid=0;              // Lower invalid flag
+                            choice=getkey();        // Get user input
+                            switch(choice) {
+                                case '1':
+                                newValue="simple";
+                                break;
+                                case '2':
+                                newValue="matching";
+                                break;
+                                case '3':
+                                newValue="upstream";
+                                break;
+                                case '4':
+                                newValue="current";
+                                break;
+                                case '5':
+                                newValue="nothing";
+                                break;
+                                case escape:
+                                newValue="escape";
+                                break;
+
+                                default: // code to be executed if n doesn't match any constant
+                                loop=1;         // Invalid choce handed so set to loop again
+                                invalid=1;      // Raise invalid flag
+                                break;
+                            }
+                        }else{ // else loop must == 2
+                            /* This is done to remove escape from screen while
+                            keeping a list of the prior option */
+                            loop = 0;
+                        }
+                    }
+
+                    if (newValue!="escape"){
+                        std::cout << "\n<" << pushDef.value() << "> --> <" << newValue <<">\n";
+                        if (confirm()){ // If true, then set new val, else do nothing
+                            c["push.default"] = newValue;
+                        }
+                    }
                     break;
 
                 case '4':
+                    clear();
+                    std::cout << "\n Bare | Current Mode: <" << bare.value() << ">\n\n";
+                    std::cout << "\n    t TRUE";
+                    std::cout << "\n    f FALSE\n";
+                    choice=getkey();
+                    std::cout << "\n==== esc: leave ===="; // Return case
+
                     break;
 
                 case '5':
+                    clear();
+                    std::cout << "\n File Mode | Current Mode: <" << filemode.value() << ">\n\n";
+                    std::cout << "\n    t TRUE";
+                    std::cout << "\n    f FALSE\n";
+                    std::cout << "\n==== esc: leave ===="; // Return case
+                    choice=getkey();
                     break;
 
                 case '6':
+                    clear();
+                    std::cout << "\n Repository Format Version | Current Version: <" << repFmtVer.value() << ">\n\n";
+                    std::cout << "\n    0 Version 0";
+                    std::cout << "\n    1 Version 1\n";
+                    std::cout << "\n==== esc: leave ===="; // Return case
                     break;
 
                 case '7':
+                    clear();
+                    std::cout << "\n Log All Reference Updates | Current Mode: <" << logAllRefUpdts.value() << ">\n\n";
+                    std::cout << "\n    t TRUE";
+                    std::cout << "\n    f FALSE\n";
+                    std::cout << "\n==== esc: leave ===="; // Return case
                     break;
 
                 default: // code to be executed if n doesn't match any constant
-                    configRepo(1); // Call back with invalid flag
+                    invalid=1; // Raise invalid flag
                     break;
             }
+            configRepo(invalid); // Call back with invalid flag
+
         }
         // museBreak();
     }
@@ -260,30 +384,25 @@ class PROGRAM : public HCI_APPLICATION {
         std::cout << "\n\n    Create new empty repository?\n";
         std::cout << "\n    y yes";
         std::cout << "\n    no, quit\n\n >";
-        char yn;
-        // std::cin >> yn;
 
-        while(std::cin >> yn){
-            if (yn=='y'){
-                std::cout << "y is for yo";
+        char choice=getkey();
+
+        if (choice=='y'){
+            // Begin creation of repository
+            std::string path=".";
+            try{
+                GITPP::REPO r(path.c_str());
+            }catch(GITPP::EXCEPTION_CANT_FIND const&){
+                GITPP::REPO r(GITPP::REPO::_create, path.c_str());
             }
+
+            GITPP::REPO r(path.c_str());
+            r.commits().create("First Commit!");
+
+            listCommit();
+
+            yourRepo(0);
         }
-        // if (yn=='y'){
-        //     // Begin creation of repository
-        //     std::string path=".";
-        //     try{
-        //         GITPP::REPO r(path.c_str());
-        //     }catch(GITPP::EXCEPTION_CANT_FIND const&){
-        //         GITPP::REPO r(GITPP::REPO::_create, path.c_str());
-        //     }
-        //
-        //     GITPP::REPO r(path.c_str());
-        //     r.commits().create("First Commit!");
-        //
-        //     listCommit();
-        //
-        //     yourRepo(0);
-        // }
     }
 
 
