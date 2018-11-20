@@ -1,14 +1,13 @@
-// git program
+// Git CLI Program
 // Author: sc17jhd
-// Date: Oct 2018
+// Date: Nov 2018
 
-#include "hci0.h"          // getkey
+#include "hci0.h"         // getkey
 #include "gitpp5.h"
 #include <iostream>
 #include <cstdlib>        // For clearing Screen
 #include <cstdlib>
 #include <sstream>        //convert to string?
-#include <typeinfo>     // Debugging variable types
 
 
 const unsigned limit=10;
@@ -17,10 +16,7 @@ const char escape=0x1b;
 
 class PROGRAM : public HCI_APPLICATION {
 
-
     void yourRepo();
-
-
 
     void museBreak(){
         std::cout << "\n\n\n Press ANY KEY to continue...\n";
@@ -151,7 +147,7 @@ class PROGRAM : public HCI_APPLICATION {
                             case escape:newValue="escape";break;
 
                             default: // code to be executed if n doesn't match any constant
-                                loop=1;         // Invalid choce handed so set to loop again
+                                loop=1;         // Invalid choice handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
                         }
@@ -186,7 +182,7 @@ class PROGRAM : public HCI_APPLICATION {
                             case escape:newValue="escape";break;
 
                             default: // code to be executed if n doesn't match any constant
-                                loop=1;         // Invalid choce handed so set to loop again
+                                loop=1;         // Invalid choice handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
                         }
@@ -221,7 +217,7 @@ class PROGRAM : public HCI_APPLICATION {
                             case escape:newValue="escape";break;
 
                             default: // code to be executed if n doesn't match any constant
-                                loop=1;         // Invalid choce handed so set to loop again
+                                loop=1;         // Invalid choice handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
                         }
@@ -257,7 +253,7 @@ class PROGRAM : public HCI_APPLICATION {
                             case escape:newValue="escape";break;
 
                             default: // code to be executed if n doesn't match any constant
-                                loop=1;         // Invalid choce handed so set to loop again
+                                loop=1;         // Invalid choice handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
                         }
@@ -265,7 +261,7 @@ class PROGRAM : public HCI_APPLICATION {
 
                     if (newValue!="escape"){
                         std::cout << "\n<" << repFmtVer.value() << "> --> <" << newValue <<">\n";
-                        if (newValue=="1"){
+                        if (newValue=="1"){ // Warn user before they shoot themself in the foot
                             std::cout << "\nWARNING: Only versions up to 0 are supported! ";
                             std::cout << "Changing to version to 1 will make your repository ";
                             std::cout << "incompatible with this software and may cause future issues. ";
@@ -300,7 +296,7 @@ class PROGRAM : public HCI_APPLICATION {
                             case escape:newValue="escape";break;
 
                             default: // code to be executed if n doesn't match any constant
-                                loop=1;         // Invalid choce handed so set to loop again
+                                loop=1;         // Invalid choice handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
                         }
@@ -354,9 +350,9 @@ class PROGRAM : public HCI_APPLICATION {
 
     }
 
-    void invalidMsg(bool invalid){
+    void invalidMsg(bool invalid){ // Displays message for unassigned key presses
         if (invalid){
-            std::cout << "\n\n Invalid arguments supplied. Please try again.\n\n";
+            std::cout << "\n\n Unassigned key pressed. Please try again.\n\n";
         }
     }
     void listBranch(int invalid){
@@ -401,13 +397,24 @@ class PROGRAM : public HCI_APPLICATION {
                             auto c=r.config();
                             if (c["core.bare"].value()=="true"){
                                 clear();
-                                std::cout << "Cannot checkout. This operation is not allowed against bare repositories.";
+                                std::cout << " Cannot checkout. This operation is not allowed against bare repositories.";
                                 museBreak();
                                 listBranch(0);
                             }else{
-                                r.checkout(i.name());             // Switch to branch
-                                listCommit(0);                     // Now list commits in this branch
-                                break;
+
+                                // Error check required as conflicts can prevent checkout of branches
+                                try{
+                                    r.checkout(i.name());   // Switch to branch
+                                    listCommit(0);          // Now list commits in this branch
+                                    break;
+                                }catch(const std::exception& e){
+                                    clear();
+                                    std::cout << " The following error has occured: \n " << e.what() << "\n\n";
+                                    std::cout << " Please resolve the aforementioned conflicts before trying again.\n";
+                                    museBreak();
+                                    listBranch(0);
+
+                                }
                             }
                         }
                     }
