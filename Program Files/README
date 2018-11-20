@@ -1,6 +1,7 @@
 == main
 
-This program provides the user with a text menu interface through which they can control git. The program consists of 3 distinct parts.
+This program provides the user with a text menu interface through which they can control git.
+The program consists of 3 distinct parts.
 • A setup wizard.
 • A configuration editor.
 • A branch/commit exploration tool.
@@ -14,7 +15,7 @@ Type
 
 $ make
 
-in the directory containting this README file. This will create a new file
+in the directory containing this README file. This will create a new file
 containing the java byte code. The command
 
 $ ls -lt

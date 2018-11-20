@@ -19,36 +19,47 @@ class PROGRAM : public HCI_APPLICATION {
     void yourRepo();
 
     void museBreak(){
-        std::cout << "\n\n\n Press ANY KEY to continue...\n";
+        std::cout << "\n\n Press ANY KEY to continue...";
         getkey();
     }
 
 
 
-    void listConfig(){
+    void listConfig(bool mode){
         // Lists configuration of an existing repository
         clear();
         GITPP::REPO r;
         auto c=r.config();
 
+        if(mode){ //Changes print based on output mode
+            std::cout << "\n=== LIST CONFIG ===\n";
+        }else{
+            std::cout << "\n=== CONFIGURE REPOSITORY ===\n";
+        }
+
         std::string mycwd(getenv("PWD")); // Get <CWD>
 
         std::cout << "\n Your git repository in <" << mycwd << ">\n" <<std::endl;
         GITPP::CONFIG::ITEM name=c["user.name"];
-        std::cout << "1. name:                          <" << name.value() << ">\n";
+        std::cout << " 1. name:                          <" << name.value() << ">\n";
         GITPP::CONFIG::ITEM email=c["user.email"];
-        std::cout << "2. email:                         <" << email.value() << ">\n";
+        std::cout << " 2. email:                         <" << email.value() << ">\n";
         GITPP::CONFIG::ITEM pushDef=c["push.default"];
-        std::cout << "3. push default:                  <" << pushDef.value() << ">\n";
+        std::cout << " 3. push default:                  <" << pushDef.value() << ">\n";
         GITPP::CONFIG::ITEM bare=c["core.bare"];
-        std::cout << "4. bare:                          <" << bare.value() << ">\n";
+        std::cout << " 4. bare:                          <" << bare.value() << ">\n";
         GITPP::CONFIG::ITEM filemode=c["core.filemode"];
-        std::cout << "5. filemode:                      <" << filemode.value() << ">\n";
+        std::cout << " 5. filemode:                      <" << filemode.value() << ">\n";
         GITPP::CONFIG::ITEM repFmtVer=c["core.repositoryformatversion"];
-        std::cout << "6. repository format version:     <" << repFmtVer.value() << ">\n";
+        std::cout << " 6. repository format version:     <" << repFmtVer.value() << ">\n";
         GITPP::CONFIG::ITEM logAllRefUpdts=c["core.logallrefupdates"];
-        std::cout << "7. log all ref updates:           <" << logAllRefUpdts.value() << ">\n";
+        std::cout << " 7. log all ref updates:           <" << logAllRefUpdts.value() << ">";
 
+        if(mode){ // change level of padding depending on mode
+            std::cout << "\n";
+        }else{
+            std::cout << "\n\n";
+        }
 
     }
 
@@ -76,11 +87,10 @@ class PROGRAM : public HCI_APPLICATION {
 
     void configRepo(int invalid){
         clear();
-        listConfig(); // First list config options
+        listConfig(0); // First list config options
         invalidMsg(invalid);
 
-
-        std::cout << "\n==== esc: leave ===="; // Return case
+        std::cout << "\n\n=== esc: leave ==="; // Return case
 
         char choice=getkey(); // Take input for what user wants to configure
 
@@ -125,16 +135,16 @@ class PROGRAM : public HCI_APPLICATION {
 
                     while (loop) { // Loop until case breaking choice is made
                         clear();
-                        invalidMsg(invalid);
-                        std::cout << "\n Select Push Mode | Current Mode: <" << pushDef.value() << ">\n\n";
+                        std::cout << "\n Select Push Mode | Current Mode: <" << pushDef.value() << ">\n";
                         std::cout << "\n    1. simple";
                         std::cout << "\n    2. matching";
                         std::cout << "\n    3. upstream";
                         std::cout << "\n    4. current";
-                        std::cout << "\n    5. nothing\n";
+                        std::cout << "\n    5. nothing\n\n";
                         if (loop==2) break;
+                        invalidMsg(invalid);
 
-                        std::cout << "\n==== esc: leave ===="; // Return case
+                        std::cout << "\n\n=== esc: leave ==="; // Return case
                         loop=2;                 // Assume loop will be broken
                         invalid=0;              // Lower invalid flag
                         choice=getkey();        // Get user input
@@ -166,13 +176,13 @@ class PROGRAM : public HCI_APPLICATION {
 
                     while (loop) { // Loop until case breaking choice is made
                         clear();
-                        invalidMsg(invalid);
-                        std::cout << "\n Bare | Current Mode: <" << bare.value() << ">\n\n";
+                        std::cout << "\n Bare | Current Mode: <" << bare.value() << ">\n";
                         std::cout << "\n    t TRUE";
-                        std::cout << "\n    f FALSE\n";
+                        std::cout << "\n    f FALSE\n\n";
                         if (loop==2) break;
+                        invalidMsg(invalid);
 
-                        std::cout << "\n==== esc: leave ===="; // Return case
+                        std::cout << "\n\n=== esc: leave ==="; // Return case
                         loop=2;                 // Assume loop will be broken
                         invalid=0;              // Lower invalid flag
                         choice=getkey();        // Get user input
@@ -199,15 +209,15 @@ class PROGRAM : public HCI_APPLICATION {
                 case '5':
                     while (loop) { // Loop until case breaking choice is made
                         clear();
-                        invalidMsg(invalid);
-                        std::cout << "\n File Mode | Current Mode: <" << filemode.value() << ">\n\n";
+                        std::cout << "\n File Mode | Current Mode: <" << filemode.value() << ">\n";
                         std::cout << "\n    t TRUE";
-                        std::cout << "\n    f FALSE\n";
+                        std::cout << "\n    f FALSE\n\n";
 
 
                         if (loop==2) break;
+                        invalidMsg(invalid);
 
-                        std::cout << "\n==== esc: leave ===="; // Return case
+                        std::cout << "\n\n=== esc: leave ==="; // Return case
                         loop=2;                 // Assume loop will be broken
                         invalid=0;              // Lower invalid flag
                         choice=getkey();        // Get user input
@@ -236,14 +246,14 @@ class PROGRAM : public HCI_APPLICATION {
 
                     while (loop) { // Loop until case breaking choice is made
                         clear();
-                        invalidMsg(invalid);
-                        std::cout << "\n Repository Format Version | Current Version: <" << repFmtVer.value() << ">\n\n";
-                        std::cout << "\n    0 ";
-                        std::cout << "\n    1 \n";
+                        std::cout << "\n Repository Format Version | Current Version: <" << repFmtVer.value() << ">\n";
+                        std::cout << "\n    0. Version Zero ";
+                        std::cout << "\n    1. Version One \n\n";
 
                         if (loop==2) break;
+                        invalidMsg(invalid);
 
-                        std::cout << "\n==== esc: leave ===="; // Return case
+                        std::cout << "\n\n=== esc: leave ==="; // Return case
                         loop=2;                 // Assume loop will be broken
                         invalid=0;              // Lower invalid flag
                         choice=getkey();        // Get user input
@@ -278,15 +288,15 @@ class PROGRAM : public HCI_APPLICATION {
 
                     while (loop) { // Loop until case breaking choice is made
                         clear();
-                        invalidMsg(invalid);
-                        std::cout << "\n Log All Reference Updates | Current Mode: <" << logAllRefUpdts.value() << ">\n\n";
+                        std::cout << "\n Log All Reference Updates | Current Mode: <" << logAllRefUpdts.value() << ">\n";
                         std::cout << "\n    t TRUE";
-                        std::cout << "\n    f FALSE\n";
+                        std::cout << "\n    f FALSE\n\n";
 
 
                         if (loop==2) break;
+                        invalidMsg(invalid);
 
-                        std::cout << "\n==== esc: leave ===="; // Return case
+                        std::cout << "\n\n=== esc: leave ==="; // Return case
                         loop=2;                 // Assume loop will be broken
                         invalid=0;              // Lower invalid flag
                         choice=getkey();        // Get user input
@@ -323,11 +333,12 @@ class PROGRAM : public HCI_APPLICATION {
 
 
     void listCommit(int maxNum){
-        // maxNum = Maximum number of commits to be displayed.
-        //          Set as 0 to display all commits.
+        /* maxNum = Maximum number of commits to be displayed.
+                    Set as 0 to display all commits.*/
 
         clear();
-        std::cout << "\n Your Commits: \n\n";
+
+        // std::cout << "\n Your Commits: \n\n";
 
         GITPP::REPO r;
 
@@ -352,12 +363,12 @@ class PROGRAM : public HCI_APPLICATION {
 
     void invalidMsg(bool invalid){ // Displays message for unassigned key presses
         if (invalid){
-            std::cout << "\n\n Unassigned key pressed. Please try again.\n\n";
+            std::cout << " Unassigned key pressed. Please try again...";
         }
     }
+
     void listBranch(int invalid){
         clear();
-        invalidMsg(invalid);
         GITPP::REPO r;
         // Display string for use in option selection
         char alphabet[] =  {'a','b','c','d','e',
@@ -366,7 +377,10 @@ class PROGRAM : public HCI_APPLICATION {
                             'p','q','r','s','t',
                             'u','v','w','x','y','z'};
 
-        std::cout << "\n    select a branch to display commits\n\n";
+
+        std::cout << "\n=== GIT COMMIT LOG ===";
+
+        std::cout << "\n\n    select a branch to display commits\n\n";
         int branchCounter=-1; // Index of current branch
         for(GITPP::BRANCH i : r.branches()){
             branchCounter+=1;
@@ -375,7 +389,9 @@ class PROGRAM : public HCI_APPLICATION {
 
         if (branchCounter){ // If more than one branch, take input for choice
 
-            std::cout << "\n==== esc: leave ===="; // Return case
+            std::cout << "\n"; // Padding
+            invalidMsg(invalid);
+            std::cout << "\n\n=== esc: leave ==="; // Return case
             char choice=getkey();
 
             if (choice!=escape){
@@ -398,6 +414,7 @@ class PROGRAM : public HCI_APPLICATION {
                             if (c["core.bare"].value()=="true"){
                                 clear();
                                 std::cout << " Cannot checkout. This operation is not allowed against bare repositories.";
+                                std::cout << "\n Please change modes and try again.";
                                 museBreak();
                                 listBranch(0);
                             }else{
@@ -438,15 +455,16 @@ class PROGRAM : public HCI_APPLICATION {
 
     void yourRepo(int invalid){
         clear();
-        invalidMsg(invalid);
 
+        // std::cout << "\n=== MAIN MENU ===";
 
-        std::cout << "\n Your git repository";
+        std::cout << "\n\n Your git repository\n";
         std::cout << "\n    c list config";
         std::cout << "\n    e configure repository";
         std::cout << "\n    l list commits";
         std::cout << "\n    q quit\n\n";
 
+        invalidMsg(invalid);
 
 
         char choice=getkey();
@@ -455,7 +473,7 @@ class PROGRAM : public HCI_APPLICATION {
         switch(choice) {
 
             case 'c':
-                listConfig();
+                listConfig(1);
                 museBreak();
                 yourRepo(0);
                 break;
@@ -471,7 +489,7 @@ class PROGRAM : public HCI_APPLICATION {
                 break;
 
             case 'q':
-                std::cout << "Goodbye!\n\n";
+                std::cout << "\n\n Goodbye!\n\n";
                 break;
 
             default: // code to be executed if n doesn't match any constant
@@ -495,11 +513,13 @@ class PROGRAM : public HCI_APPLICATION {
     }
 
 
-    void createRepo(){
+    void createRepo(bool invalid){
         clear();
+        std::cout << "\n=== CREATE REPOSITORY ===";
         std::cout << "\n\n    Create new empty repository?\n";
         std::cout << "\n    y yes";
-        std::cout << "\n    n quit\n\n >";
+        std::cout << "\n    n no, quit\n\n";
+        invalidMsg(invalid);
 
         char choice=getkey();
 
@@ -516,10 +536,13 @@ class PROGRAM : public HCI_APPLICATION {
             r.commits().create("First Commit!");
 
             listCommit(0);
-
             yourRepo(0);
         }else{
-            std::cout << "Goodbye!\n\n";
+            if (choice=='n'){
+                std::cout << "\n Goodbye!\n\n";
+            }else{
+                createRepo(1);
+            }
         }
     }
 
@@ -529,7 +552,7 @@ class PROGRAM : public HCI_APPLICATION {
 public:
     void startup(){
         if (!repoExists()){
-            createRepo();
+            createRepo(0);
         }else{
             listCommit(10); // List first 10 commits
             yourRepo(0);
