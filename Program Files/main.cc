@@ -25,13 +25,8 @@ class PROGRAM : public HCI_APPLICATION {
     void museBreak(){
         std::cout << "\n\n\n Press ANY KEY to continue...\n";
         getkey();
-        // system("read");
-
     }
 
-// void clear(){
-//     system("clear");        // Warning, System dependent.
-// }
 
 
     void listConfig(){
@@ -80,6 +75,9 @@ class PROGRAM : public HCI_APPLICATION {
     }
 
 
+
+
+
     void configRepo(int invalid){
         clear();
         listConfig(); // First list config options
@@ -121,7 +119,7 @@ class PROGRAM : public HCI_APPLICATION {
                     clear();
                     std::cout << "\n Enter A New Email | Current Email: <" << email.value() << ">\n\n>>>";
                     std::cin >> newValue;
-                    std::cout << "\n<" << name.value() << "> --> <" << newValue <<">\n";
+                    std::cout << "\n<" << email.value() << "> --> <" << newValue <<">\n";
                     if (confirm()){ // If true, then set new val, else do nothing
                         c["user.email"] = newValue;
                     }
@@ -138,40 +136,24 @@ class PROGRAM : public HCI_APPLICATION {
                         std::cout << "\n    3. upstream";
                         std::cout << "\n    4. current";
                         std::cout << "\n    5. nothing\n";
-                        if (loop==1){
-                            std::cout << "\n==== esc: leave ===="; // Return case
-                            loop=2;                 // Assume loop will be broken
-                            invalid=0;              // Lower invalid flag
-                            choice=getkey();        // Get user input
-                            switch(choice) {
-                                case '1':
-                                newValue="simple";
-                                break;
-                                case '2':
-                                newValue="matching";
-                                break;
-                                case '3':
-                                newValue="upstream";
-                                break;
-                                case '4':
-                                newValue="current";
-                                break;
-                                case '5':
-                                newValue="nothing";
-                                break;
-                                case escape:
-                                newValue="escape";
-                                break;
+                        if (loop==2) break;
 
-                                default: // code to be executed if n doesn't match any constant
+                        std::cout << "\n==== esc: leave ===="; // Return case
+                        loop=2;                 // Assume loop will be broken
+                        invalid=0;              // Lower invalid flag
+                        choice=getkey();        // Get user input
+                        switch(choice) {
+                            case '1':newValue="simple";break;
+                            case '2':newValue="matching";break;
+                            case '3':newValue="upstream";break;
+                            case '4':newValue="current";break;
+                            case '5':newValue="nothing";break;
+                            case escape:newValue="escape";break;
+
+                            default: // code to be executed if n doesn't match any constant
                                 loop=1;         // Invalid choce handed so set to loop again
                                 invalid=1;      // Raise invalid flag
                                 break;
-                            }
-                        }else{ // else loop must == 2
-                            /* This is done to remove escape from screen while
-                            keeping a list of the prior option */
-                            loop = 0;
                         }
                     }
 
@@ -184,38 +166,152 @@ class PROGRAM : public HCI_APPLICATION {
                     break;
 
                 case '4':
-                    clear();
-                    std::cout << "\n Bare | Current Mode: <" << bare.value() << ">\n\n";
-                    std::cout << "\n    t TRUE";
-                    std::cout << "\n    f FALSE\n";
-                    choice=getkey();
-                    std::cout << "\n==== esc: leave ===="; // Return case
 
+
+                    while (loop) { // Loop until case breaking choice is made
+                        clear();
+                        invalidMsg(invalid);
+                        std::cout << "\n Bare | Current Mode: <" << bare.value() << ">\n\n";
+                        std::cout << "\n    t TRUE";
+                        std::cout << "\n    f FALSE\n";
+                        if (loop==2) break;
+
+                        std::cout << "\n==== esc: leave ===="; // Return case
+                        loop=2;                 // Assume loop will be broken
+                        invalid=0;              // Lower invalid flag
+                        choice=getkey();        // Get user input
+                        switch(choice) {
+                            case 't':newValue="true";break;
+                            case 'f':newValue="false";break;
+                            case escape:newValue="escape";break;
+
+                            default: // code to be executed if n doesn't match any constant
+                                loop=1;         // Invalid choce handed so set to loop again
+                                invalid=1;      // Raise invalid flag
+                                break;
+                        }
+                    }
+
+                    if (newValue!="escape"){
+                        std::cout << "\n<" << bare.value() << "> --> <" << newValue <<">\n";
+                        if (confirm()){ // If true, then set new val, else do nothing
+                            c["core.bare"] = newValue;
+                        }
+                    }
                     break;
 
                 case '5':
-                    clear();
-                    std::cout << "\n File Mode | Current Mode: <" << filemode.value() << ">\n\n";
-                    std::cout << "\n    t TRUE";
-                    std::cout << "\n    f FALSE\n";
-                    std::cout << "\n==== esc: leave ===="; // Return case
-                    choice=getkey();
+                    while (loop) { // Loop until case breaking choice is made
+                        clear();
+                        invalidMsg(invalid);
+                        std::cout << "\n File Mode | Current Mode: <" << filemode.value() << ">\n\n";
+                        std::cout << "\n    t TRUE";
+                        std::cout << "\n    f FALSE\n";
+
+
+                        if (loop==2) break;
+
+                        std::cout << "\n==== esc: leave ===="; // Return case
+                        loop=2;                 // Assume loop will be broken
+                        invalid=0;              // Lower invalid flag
+                        choice=getkey();        // Get user input
+                        switch(choice) {
+                            case 't':newValue="true";break;
+                            case 'f':newValue="false";break;
+                            case escape:newValue="escape";break;
+
+                            default: // code to be executed if n doesn't match any constant
+                                loop=1;         // Invalid choce handed so set to loop again
+                                invalid=1;      // Raise invalid flag
+                                break;
+                        }
+                    }
+
+                    if (newValue!="escape"){
+                        std::cout << "\n<" << filemode.value() << "> --> <" << newValue <<">\n";
+                        if (confirm()){ // If true, then set new val, else do nothing
+                            c["core.filemode"] = newValue;
+                        }
+                    }
                     break;
 
                 case '6':
                     clear();
-                    std::cout << "\n Repository Format Version | Current Version: <" << repFmtVer.value() << ">\n\n";
-                    std::cout << "\n    0 Version 0";
-                    std::cout << "\n    1 Version 1\n";
-                    std::cout << "\n==== esc: leave ===="; // Return case
+
+                    while (loop) { // Loop until case breaking choice is made
+                        clear();
+                        invalidMsg(invalid);
+                        std::cout << "\n Repository Format Version | Current Version: <" << repFmtVer.value() << ">\n\n";
+                        std::cout << "\n    0 ";
+                        std::cout << "\n    1 \n";
+
+                        if (loop==2) break;
+
+                        std::cout << "\n==== esc: leave ===="; // Return case
+                        loop=2;                 // Assume loop will be broken
+                        invalid=0;              // Lower invalid flag
+                        choice=getkey();        // Get user input
+                        switch(choice) {
+                            case '0':newValue="0";break;
+                            case '1':newValue="1";break;
+                            case escape:newValue="escape";break;
+
+                            default: // code to be executed if n doesn't match any constant
+                                loop=1;         // Invalid choce handed so set to loop again
+                                invalid=1;      // Raise invalid flag
+                                break;
+                        }
+                    }
+
+                    if (newValue!="escape"){
+                        std::cout << "\n<" << repFmtVer.value() << "> --> <" << newValue <<">\n";
+                        if (newValue=="1"){
+                            std::cout << "\nWARNING: Only versions up to 0 are supported! ";
+                            std::cout << "Changing to version to 1 will make your repository ";
+                            std::cout << "incompatible with this software and may cause future issues. ";
+                            std::cout << "\nAre you sure you wish to continue?\n";
+                        }
+                        if (confirm()){ // If true, then set new val, else do nothing
+                            c["core.repositoryformatversion"] = newValue;
+                        }
+                    }
                     break;
 
+
                 case '7':
-                    clear();
-                    std::cout << "\n Log All Reference Updates | Current Mode: <" << logAllRefUpdts.value() << ">\n\n";
-                    std::cout << "\n    t TRUE";
-                    std::cout << "\n    f FALSE\n";
-                    std::cout << "\n==== esc: leave ===="; // Return case
+
+                    while (loop) { // Loop until case breaking choice is made
+                        clear();
+                        invalidMsg(invalid);
+                        std::cout << "\n Log All Reference Updates | Current Mode: <" << logAllRefUpdts.value() << ">\n\n";
+                        std::cout << "\n    t TRUE";
+                        std::cout << "\n    f FALSE\n";
+
+
+                        if (loop==2) break;
+
+                        std::cout << "\n==== esc: leave ===="; // Return case
+                        loop=2;                 // Assume loop will be broken
+                        invalid=0;              // Lower invalid flag
+                        choice=getkey();        // Get user input
+                        switch(choice) {
+                            case 't':newValue="true";break;
+                            case 'f':newValue="false";break;
+                            case escape:newValue="escape";break;
+
+                            default: // code to be executed if n doesn't match any constant
+                                loop=1;         // Invalid choce handed so set to loop again
+                                invalid=1;      // Raise invalid flag
+                                break;
+                        }
+                    }
+
+                    if (newValue!="escape"){
+                        std::cout << "\n<" << logAllRefUpdts.value() << "> --> <" << newValue <<">\n";
+                        if (confirm()){ // If true, then set new val, else do nothing
+                            c["core.logallrefupdates"] = newValue;
+                        }
+                    }
                     break;
 
                 default: // code to be executed if n doesn't match any constant
@@ -297,9 +393,18 @@ class PROGRAM : public HCI_APPLICATION {
                         if (alphabet[branchCounter]=='z'){
                             break;
                         }else{
-                            r.checkout(i.name());             // Switch to branch
-                            listCommit();                     // Now list commits in this branch
-                            break;
+                            // Ensue repo is not bare before checking out
+                            auto c=r.config();
+                            if (c["core.bare"].value()=="true"){
+                                clear();
+                                std::cout << "Cannot checkout. This operation is not allowed against bare repositories.";
+                                museBreak();
+                                listBranch(0);
+                            }else{
+                                r.checkout(i.name());             // Switch to branch
+                                listCommit();                     // Now list commits in this branch
+                                break;
+                            }
                         }
                     }
                 }
@@ -383,7 +488,7 @@ class PROGRAM : public HCI_APPLICATION {
         clear();
         std::cout << "\n\n    Create new empty repository?\n";
         std::cout << "\n    y yes";
-        std::cout << "\n    no, quit\n\n >";
+        std::cout << "\n    n quit\n\n >";
 
         char choice=getkey();
 
